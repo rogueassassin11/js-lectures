@@ -1,0 +1,97 @@
+'use strict';
+
+/************************************************/
+/* OOP CONCEPTS
+/************************************************/
+
+// Abstraction - hide details that don't matter
+
+// Encapsulation - keeping properties and methods unaccessible or accessible through API
+// state - object's data
+
+// Inheritance - makes all properties and methods from a parent class available to a child class
+
+// Polymorphism - a child class can overwrite a method it inherited from a parent class
+
+/************************************************/
+/* OOP IN JS
+/************************************************/
+
+// each object has a prototype
+
+//prototypal inheritance - all objects can use the properties and methods from a prototype / method is delegated by object to prototype
+
+// 1. Constructor function - creates objects from a function (array, map, set)
+
+// 2. ES6 classes - abstraction / different syntax of constructor functions / still prototypal inheritance
+
+// 3. Object.create
+
+/************************************************/
+/* CONSTRUCTOR FUNCTIONS
+/************************************************/
+
+// constructor functions start with a capital letter / arrow functions do not work because has no 'this' keyword
+
+// 1. New {} is created
+// 2. Function is called, this = {}
+// 3. {} linked to a prototype
+// 4. function automatically returns {}
+
+const Person = function (firstName, birthYear) {
+  //instance properties
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+
+  //never create a method in a constructor function
+  // this.calcAge = function() {
+  //   console.log(2021 - this.birthYear);
+  // };
+};
+
+const elias = new Person('Elias', 1821);
+console.log(elias);
+
+const chise = new Person('Chise', 2005);
+const lindel = new Person('Lindel', 1721);
+console.log(chise, lindel);
+
+console.log(elias instanceof Person); //true
+
+/************************************************/
+/* PROTOTYPES
+/************************************************/
+
+//creating a method in the prototype / only one copy
+Person.prototype.calcAge = function () {
+  console.log(2021 - this.birthYear);
+};
+
+console.log(Person.prototype);
+
+elias.calcAge(); //does not contain the calcAge method but has access to it through the prototype
+chise.calcAge();
+
+console.log(elias.__proto__);
+console.log(elias.__proto__ === Person.prototype);
+
+console.log(Person.prototype.isPrototypeOf(elias)); //true
+console.log(Person.prototype.isPrototypeOf(Person)); //false
+
+//setting properties on the prototype
+Person.prototype.species = 'Mage';
+console.log(elias.species, chise.species);
+
+//checking property if owned by the object
+console.log(elias.hasOwnProperty('firstName'));
+console.log(elias.hasOwnProperty('species'));
+
+/************************************************/
+/* PROTOTYPAL INHERITANCE
+/************************************************/
+
+//__proto__ always points to an object's prototype
+
+// JS looks for the property or method in the prototype if not found in the object - prototype delegation
+
+// prototype chain -> Object.prototype is the prototype of any constructor prototype // looks for methods/properties in the chain if not found in the object
