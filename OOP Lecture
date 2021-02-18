@@ -37,7 +37,7 @@
 // 2. Function is called, this = {}
 // 3. {} linked to a prototype
 // 4. function automatically returns {}
-
+/* 
 const Person = function (firstName, birthYear) {
   //instance properties
   this.firstName = firstName;
@@ -58,12 +58,17 @@ console.log(chise, lindel);
 
 console.log(elias instanceof Person); //true
 
+Person.hey = function () {
+  console.log('Hey there!');
+};
+ */
+
 /************************************************/
 /* PROTOTYPES
 /************************************************/
 
 //creating a method in the prototype / only one copy
-Person.prototype.calcAge = function () {
+/* Person.prototype.calcAge = function () {
   console.log(2021 - this.birthYear);
 };
 
@@ -84,7 +89,7 @@ console.log(elias.species, chise.species);
 
 //checking property if owned by the object
 console.log(elias.hasOwnProperty('firstName'));
-console.log(elias.hasOwnProperty('species'));
+console.log(elias.hasOwnProperty('species')); */
 
 /************************************************/
 /* PROTOTYPAL INHERITANCE
@@ -95,3 +100,154 @@ console.log(elias.hasOwnProperty('species'));
 // JS looks for the property or method in the prototype if not found in the object - prototype delegation
 
 // prototype chain -> Object.prototype is the prototype of any constructor prototype // looks for methods/properties in the chain if not found in the object
+
+/* console.log(elias.__proto__); //person prototype
+console.log(elias.__proto__.__proto__); // object.prototype
+console.log(elias.__proto__.__proto__.__proto__); //null
+
+console.dir(Person.prototype.constructor);
+
+const arr = [3, 6, 4, 5, 6, 9, 3];
+console.log(arr.__proto__); //each array inherits methods from the array prototype
+
+console.log(arr.__proto__ === Array.prototype); //true
+console.log(arr.__proto__.__proto__); // object prototype
+
+//adding a method to the array prototype
+Array.prototype.unique = function () {
+  return [...new Set(this)];
+};
+
+console.log(arr.unique());
+
+const h1 = document.querySelector('h1');
+console.dir(x => x + 1); */
+
+/************************************************/
+/* CODING CHALLENGE #1
+/************************************************/
+/* 
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(`${this.make} going at ${this.speed} km/h`);
+};
+
+Car.prototype.brake = function () {
+  this.speed -= 5;
+  console.log(`${this.make} going at ${this.speed} km/h`);
+};
+
+const bmw = new Car('BMW', 120);
+const mercedes = new Car('Mercedes', 95);
+
+bmw.accelerate();
+bmw.accelerate();
+bmw.accelerate();
+bmw.brake();
+mercedes.accelerate();
+mercedes.brake();
+ */
+
+/************************************************/
+/* ES6 CLASSES
+/************************************************/
+
+//class expression
+// const PersonCl = class {
+
+// }
+
+//class declaration
+class PersonCl {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  //methods will be added to the prototype - still prototype inheritance
+  calcAge() {
+    console.log(2021 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.firstName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  //setting a property that already exists
+  set fullName(name) {
+    console.log(name);
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+
+  static hey() {
+    console.log(`Hey there!`);
+    console.log(this);
+  }
+}
+
+const elias = new PersonCl('Elias Ainsworth', 1821);
+console.log(elias);
+elias.calcAge();
+console.log(elias.age);
+
+console.log(elias.__proto__ === PersonCl.prototype);
+
+// PersonCl.prototype.greet = function () {
+//   console.log(`Hey ${this.firstName}`);
+// };
+
+elias.greet();
+
+//1. Classes are not hoisted even if they are declarations
+//2. Classes are first class - can be passed and returned from functions
+//3. Classes are executed in strict mode
+
+const chise = new PersonCl('Chise Hatori', 2005);
+PersonCl.hey();
+
+/************************************************/
+/* SETTERS AND GETTERS
+/************************************************/
+
+// setters and getters are functions/properties that get and set / kind of added as a property
+
+const account = {
+  owner: 'Elias',
+  movements: [200, 530, 120, 300],
+
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+//get - has no call
+console.log(account.latest);
+
+//set
+account.latest = 50;
+console.log(account.movements);
+
+/************************************************/
+/* STATIC METHODS
+/************************************************/
+
+//Array.from is attached in the array constructor
+//Number.parseFloat is attached to the number constructor
