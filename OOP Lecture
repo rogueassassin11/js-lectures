@@ -126,7 +126,7 @@ console.dir(x => x + 1); */
 /************************************************/
 /* CODING CHALLENGE #1
 /************************************************/
-/* 
+
 const Car = function (make, speed) {
   this.make = make;
   this.speed = speed;
@@ -151,7 +151,6 @@ bmw.accelerate();
 bmw.brake();
 mercedes.accelerate();
 mercedes.brake();
- */
 
 /************************************************/
 /* ES6 CLASSES
@@ -251,3 +250,139 @@ console.log(account.movements);
 
 //Array.from is attached in the array constructor
 //Number.parseFloat is attached to the number constructor
+
+/************************************************/
+/* OBJECT.CREATE
+/************************************************/
+
+/* const PersonProto = {
+  calcAge() {
+    console.log(2021 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const kabu = Object.create(PersonProto);
+console.log(kabu);
+kabu.name = 'Kabu';
+kabu.birthYear = '2002';
+kabu.calcAge();
+
+console.log(kabu.__proto__ === PersonProto);
+
+const natsume = Object.create(PersonProto);
+
+natsume.init('Natsume', 1979);
+natsume.calcAge(); */
+
+/************************************************/
+/* CODING CHALLENGE #2
+/************************************************/
+/* 
+class Car {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`${this.make} going at ${this.speed} km/h`);
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(`${this.make} going at ${this.speed} km/h`);
+  }
+
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+
+  set speedUS(speed) {
+    this.speed = speed * 1.6;
+  }
+}
+
+const ford = new Car('Ford', 120);
+ford.accelerate();
+ford.accelerate();
+ford.brake();
+ford.speedUS = 50;
+console.log(ford);
+ */
+/************************************************/
+/* INHERITANCE BETWEEN 'CLASSES':
+   CONSTRUCTOR FUNCTION
+/************************************************/
+
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2021 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+// Linking prototypes
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.firstName}, and I study ${this.course}`);
+};
+
+const juuzo = new Student('Juuzo', 2020, 'Computer Science');
+console.log(juuzo);
+juuzo.introduce();
+juuzo.calcAge();
+
+console.log(juuzo.__proto__.__proto__); //person.prototype
+
+console.log(juuzo instanceof Student);
+console.log(juuzo instanceof Person);
+console.log(juuzo instanceof Object);
+
+Student.prototype.constructor = Student;
+console.dir(Student.prototype.constructor);
+
+/************************************************/
+/* CODING CHALLENGE #3
+/************************************************/
+
+const Ev = function (make, speed, charge) {
+  Car.call(this, make, speed);
+  this.charge = charge;
+};
+
+//link the prototype
+Ev.prototype = Object.create(Car.prototype);
+
+Ev.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+};
+
+Ev.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge -= 1;
+  console.log(
+    `${this.make} going at ${this.speed} km/h, with a charge of ${this.charge}%`
+  );
+};
+
+const tesla = new Ev('Tesla', 120, 23);
+console.log(tesla);
+tesla.accelerate();
+tesla.accelerate();
+tesla.chargeBattery(50);
+tesla.accelerate();
+tesla.brake();
