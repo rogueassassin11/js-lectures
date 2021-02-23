@@ -127,7 +127,7 @@ console.dir(x => x + 1); */
 /* CODING CHALLENGE #1
 /************************************************/
 
-const Car = function (make, speed) {
+/* const Car = function (make, speed) {
   this.make = make;
   this.speed = speed;
 };
@@ -150,7 +150,7 @@ bmw.accelerate();
 bmw.accelerate();
 bmw.brake();
 mercedes.accelerate();
-mercedes.brake();
+mercedes.brake(); */
 
 /************************************************/
 /* ES6 CLASSES
@@ -161,7 +161,7 @@ mercedes.brake();
 
 // }
 
-//class declaration
+/* //class declaration
 class PersonCl {
   constructor(fullName, birthYear) {
     this.fullName = fullName;
@@ -203,27 +203,27 @@ console.log(elias);
 elias.calcAge();
 console.log(elias.age);
 
-console.log(elias.__proto__ === PersonCl.prototype);
+console.log(elias.__proto__ === PersonCl.prototype); */
 
 // PersonCl.prototype.greet = function () {
 //   console.log(`Hey ${this.firstName}`);
 // };
 
-elias.greet();
+// elias.greet();
 
 //1. Classes are not hoisted even if they are declarations
 //2. Classes are first class - can be passed and returned from functions
 //3. Classes are executed in strict mode
 
-const chise = new PersonCl('Chise Hatori', 2005);
+/* const chise = new PersonCl('Chise Hatori', 2005);
 PersonCl.hey();
-
+ */
 /************************************************/
 /* SETTERS AND GETTERS
 /************************************************/
 
 // setters and getters are functions/properties that get and set / kind of added as a property
-
+/* 
 const account = {
   owner: 'Elias',
   movements: [200, 530, 120, 300],
@@ -242,7 +242,7 @@ console.log(account.latest);
 
 //set
 account.latest = 50;
-console.log(account.movements);
+console.log(account.movements); */
 
 /************************************************/
 /* STATIC METHODS
@@ -320,7 +320,7 @@ console.log(ford);
    CONSTRUCTOR FUNCTION
 /************************************************/
 
-const Person = function (firstName, birthYear) {
+/* const Person = function (firstName, birthYear) {
   this.firstName = firstName;
   this.birthYear = birthYear;
 };
@@ -353,13 +353,13 @@ console.log(juuzo instanceof Person);
 console.log(juuzo instanceof Object);
 
 Student.prototype.constructor = Student;
-console.dir(Student.prototype.constructor);
+console.dir(Student.prototype.constructor); */
 
 /************************************************/
 /* CODING CHALLENGE #3
 /************************************************/
 
-const Ev = function (make, speed, charge) {
+/* const Ev = function (make, speed, charge) {
   Car.call(this, make, speed);
   this.charge = charge;
 };
@@ -386,3 +386,177 @@ tesla.accelerate();
 tesla.chargeBattery(50);
 tesla.accelerate();
 tesla.brake();
+ */
+
+/************************************************/
+/* INHERITANCE BETWEEN CLASSES - ES6
+/************************************************/
+/* 
+class PersonCl {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  //methods will be added to the prototype - still prototype inheritance
+  calcAge() {
+    console.log(2021 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.firstName}`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  //setting a property that already exists
+  set fullName(name) {
+    console.log(name);
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+
+  static hey() {
+    console.log(`Hey there!`);
+    console.log(this);
+  }
+}
+
+//extend and super
+class StudentCl extends PersonCl {
+  constructor(fullName, birthYear, course) {
+    //super always needs to happen first - responsible for the this keyword
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  introduce() {
+    console.log(`My name is ${this.fullName}, and I study ${this.course}`);
+  }
+
+  calcAge() {
+    console.log(
+      `I'm ${
+        2037 - this.birthYear
+      } years old, but as a student I feel more like a ${
+        2037 - this.birthYear + 100
+      }`
+    );
+  }
+}
+
+const lindel = new StudentCl('Lindel Lindenbaum', 2012, 'Zoology');
+lindel.introduce();
+lindel.calcAge(); */
+
+/************************************************/
+/* INHERITANCE BETWEEN CLASSES - OBJECT.CREATE
+/************************************************/
+/* 
+const PersonProto = {
+  calcAge() {
+    console.log(2021 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const renfred = Object.create(PersonProto);
+
+//alice inherits from StudentProto, StudentProto inherits from PersonProto
+const StudentProto = Object.create(PersonProto);
+
+StudentProto.init = function (firstName, birthYear, course) {
+  PersonProto.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto.introduce = function () {
+  console.log(`My name is ${this.firstName}, and I study ${this.course}`);
+};
+
+const alice = Object.create(StudentProto);
+alice.init('Alice', 2010, 'Engineering');
+alice.introduce();
+alice.calcAge(); */
+
+/************************************************/
+/* ANOTHER CLASS EXAMPLE
+   ENCAPSULATION - PRIVATE CLASS FIELDS & METHODS
+/************************************************/
+
+// 1. Public fields, 2. private fields, 3. public fields, 4. private methods, static methods
+
+class Account {
+  // 1. public fields
+  locale = navigator.language;
+
+  // 2. private fields (instances)
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+
+    //protected property convention: '_'
+    // this._movements = [];
+    this.#pin = pin;
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  //3. public methods
+  //public interface
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log('Loan approved');
+    }
+  }
+
+  //4. private methods - no browser supports this yet
+  // #approveLoan(val) {
+  _approveLoan(val) {
+    return true;
+  }
+
+  //not available on instances, only on class
+  static helper() {
+    console.log('Helper');
+  }
+}
+
+const acc1 = new Account('Elias', 'EUR', 1111);
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+
+console.log(acc1.getMovements());
+// console.log(acc1.#movements);
+console.log(acc1);
+console.log(acc1.pin);
+
+Account.helper();
