@@ -1,0 +1,249 @@
+'use strict';
+
+/**********************/
+/* SCOPE CHAIN
+/**********************/
+/* function calcAge(birthYear) {
+  const age = 2037 - birthYear;
+
+  function printAge() {
+    let output = `${firstName}, you are ${age}, born in ${birthYear}`;
+    console.log(output);
+
+    if (birthYear >= 1981 && birthYear <= 1996) {
+      var millenial = true;
+      const str = `Oh, and you're a millenial, ${firstName}`;
+      output = 'NEW OUTPUT!';
+      console.log(str);
+
+      function add(a, b) {
+        return a + b;
+      }
+    }
+    //console.log(str); //error const and let are block scoped
+    console.log(millenial); // var can be accessed outside the block scope
+    //console.log(add(2, 3));
+
+    console.log(output);
+  }
+
+  printAge();
+  return age;
+}
+
+const firstName = 'Juuzo';
+calcAge(1991); */
+
+/**********************/
+/* HOISTING
+/**********************/
+/* 
+//Hoisting with variables
+console.log(me); // undefined
+//console.log(job); // TDZ, cannot access before initialization
+//console.log(year); // TDZ, cannot access before initialization
+
+var me = 'Juuzo';
+let job = 'Resolver';
+const year = 1991;
+
+// Hoisting with functions
+console.log(addDecl(2, 3)); // 5, func dec is ok
+//console.log(addExpr(2, 3)); // TDZ, cannot access before initialization 
+//console.log(addArrow(2, 3)); // var is undefined when hoisted
+
+function addDecl(a, b) {
+  return a + b;
+}
+
+const addExpr = function (a, b) {
+  return a + b;
+};
+
+var addArrow = (a, b) => a + b;
+
+// bad example
+console.log(numProducts);
+if (!numProducts) deleteShoppingCart(); //hoisting makes var undefined
+
+var numProducts = 10;
+
+function deleteShoppingCart() {
+  console.log('All products deleted!');
+}
+
+//VAR, LET, CONST
+var x = 1;
+let y = 2;
+const z = 3;
+
+console.log(x === window.x); //var creates a property on the window object
+console.log(y === window.y);
+console.log(z === window.z);
+ */
+
+/**********************/
+/* THIS KEYWORD
+/**********************/
+/* 
+// this keyword inside function declaration, expression, and arrow
+console.log(this); // simply window object
+
+const calcAge = function (birthYear) {
+  console.log(2037 - birthYear);
+  console.log(this); //undefined
+};
+
+calcAge(1991); // undefined in func dec, but when sloppy (not strict mode), window object
+
+const calcAgeArrow = birthYear => {
+  console.log(2037 - birthYear);
+  console.log(this); //undefined
+};
+calcAgeArrow(1980); // lexical this - uses the this keyword of the parent (which is window object here)
+
+// this inside the object - NOT STATIC!
+const juuzo = {
+  year: 1991,
+  calcAge: function () {
+    console.log(this);
+    console.log(2037 - this.year);
+  },
+};
+juuzo.calcAge();
+
+const kaburagi = {
+  year: 2017,
+};
+
+kaburagi.calcAge = juuzo.calcAge;
+kaburagi.calcAge();
+
+const f = juuzo.calcAge;
+f(); // this keyword is now undefined;
+ */
+
+/**********************/
+/* ARROW FUNCTIONS
+/**********************/
+
+// arrow functions has no this keyword but takes the this of the parent
+//never use arrow functions as method
+
+//var firstName = 'Mary'; // var creates a property on window object
+
+// this is undefined - in a regular function call, 'this' is undefined
+
+/* const juuzo = {
+  year: 1991,
+  calcAge: function () {
+    console.log(this);
+    console.log(2037 - this.year);
+
+    //Solution 1: self
+    /* const self = this; //self or that
+    const isMillenial = function () {
+      console.log(self);
+      console.log(self.year >= 1981 && self.year <= 1996);
+    };
+ */
+
+//solution 2 - arrow functions inherits the 'this' of the parent
+/*  const isMillenial = () => {
+      console.log(this);
+      console.log(this.year >= 1981 && this.year <= 1996);
+    };
+
+    isMillenial();
+  },
+
+  greet: () => {
+    console.log(this);
+    console.log(`Hey ${this.firstName}`);
+  },
+};
+
+juuzo.greet(); // Hey undefined
+juuzo.calcAge(); */
+
+// arguments keyword - func exp and func dec have arguments keyword
+/* const addExpr = function (a, b) {
+  console.log(arguments); //returns an array
+  return a + b;
+};
+
+addExpr(2, 5);
+addExpr(2, 5, 8, 12); */
+
+//arrow functions has no arguments keyword - undefined
+/* var addArrow = (a, b) => {
+  console.log(arguments);
+  return a + b;
+};
+
+addArrow(2, 5, 8); */
+
+/***************************/
+/* PRIMITIVE VS. REFERENCE
+/***************************/
+/* 
+//primitives - numbers, strings, boolean
+
+let age = 30;
+let oldAge = age;
+age = 31;
+console.log(age);
+console.log(oldAge);
+
+//reference types - objects, arrays, functions
+//me and friend objects point to the same memory heap
+const me = {
+  name: 'Juuzo',
+  age: 30,
+};
+
+//const reference values are mutable
+const friend = me;
+friend.age = 27;
+
+console.log(`Friend: ${friend.age}`);
+console.log(`Me: ${me.age}`);
+
+//PRIMITIVE VS. REFERENCE
+//Primitive
+let lastName = 'Thirteen';
+let oldLastName = lastName;
+lastName = 'Inui';
+console.log(lastName, oldLastName);
+
+//Reference
+const kaburagi = {
+  firstName: 'Kabu',
+  lastName: 'Kaburagi',
+  age: 40,
+};
+
+const marriedKabu = kaburagi; //not a new object in the heap, but just points to the same memory address
+marriedKabu.lastName = 'differentLastName';
+console.log('Before marriage:', kaburagi);
+console.log('after marriage:', marriedKabu);
+
+// copying objects
+const kaburagi2 = {
+  firstName: 'Kabu',
+  lastName: 'Kaburagi',
+  age: 40,
+  family: ['Natsume', 'Kurenai'],
+};
+
+const kaburagiCopy = Object.assign({}, kaburagi2);
+kaburagiCopy.lastName = 'Copy last name';
+console.log('Before marriage:', kaburagi2);
+console.log('after marriage:', kaburagiCopy);
+
+//shallow vs. deep clone
+kaburagiCopy.family.push('Minato');
+kaburagiCopy.family.push('Jill');
+console.log('Before marriage:', kaburagi2); //is also changed because of shallow copy
+console.log('after marriage:', kaburagiCopy);
+ */
