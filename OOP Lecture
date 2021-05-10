@@ -4,14 +4,21 @@
 /* OOP CONCEPTS
 /************************************************/
 
+//API: methods that code outside of the object can access to communicate with the object
+
 // Abstraction - hide details that don't matter
 
-// Encapsulation - keeping properties and methods unaccessible or accessible through API
+// Encapsulation - keeping properties and methods unaccessible or accessible through API  / prevents external code from manipulating internal properties
+
 // state - object's data
 
 // Inheritance - makes all properties and methods from a parent class available to a child class
 
 // Polymorphism - a child class can overwrite a method it inherited from a parent class
+
+// Classes - like a blueprint to use to create new objects
+
+// Instance - all objects created from a class
 
 /************************************************/
 /* OOP IN JS
@@ -20,6 +27,8 @@
 // each object has a prototype
 
 //prototypal inheritance - all objects can use the properties and methods from a prototype / method is delegated by object to prototype
+
+// behavior is delegated to the linked prototype object
 
 // 1. Constructor function - creates objects from a function (array, map, set)
 
@@ -33,7 +42,7 @@
 
 // constructor functions start with a capital letter / arrow functions do not work because has no 'this' keyword
 
-// 1. New {} is created
+// 1. New {} empty object is created
 // 2. Function is called, this = {}
 // 3. {} linked to a prototype
 // 4. function automatically returns {}
@@ -43,7 +52,7 @@ const Person = function (firstName, birthYear) {
   this.firstName = firstName;
   this.birthYear = birthYear;
 
-  //never create a method in a constructor function
+  //never create a method in a constructor function - would be copied and carried to all the instances
   // this.calcAge = function() {
   //   console.log(2021 - this.birthYear);
   // };
@@ -70,26 +79,33 @@ Person.hey = function () {
 //creating a method in the prototype / only one copy
 /* Person.prototype.calcAge = function () {
   console.log(2021 - this.birthYear);
+
+  //this keyword is set to the object calling the method
 };
 
 console.log(Person.prototype);
 
 elias.calcAge(); //does not contain the calcAge method but has access to it through the prototype
+
 chise.calcAge();
 
 console.log(elias.__proto__);
-console.log(elias.__proto__ === Person.prototype);
+console.log(elias.__proto__ === Person.prototype); // elias's prototype is the prototype of the constructor function Person
 
 console.log(Person.prototype.isPrototypeOf(elias)); //true
 console.log(Person.prototype.isPrototypeOf(Person)); //false
 
-//setting properties on the prototype
+// think of Person.prototype as 'Person.prototypeOfLinkedObjects' 
+
+//setting properties on the prototype / but not 'own' properties
 Person.prototype.species = 'Mage';
 console.log(elias.species, chise.species);
 
 //checking property if owned by the object
-console.log(elias.hasOwnProperty('firstName'));
-console.log(elias.hasOwnProperty('species')); */
+console.log(elias.hasOwnProperty('firstName')); //true
+console.log(elias.hasOwnProperty('species')); //false
+
+*/
 
 /************************************************/
 /* PROTOTYPAL INHERITANCE
