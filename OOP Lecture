@@ -67,8 +67,10 @@ console.log(chise, lindel);
 
 console.log(elias instanceof Person); //true
 
+//this hey method cannot be inherited because it is in the constructor
 Person.hey = function () {
   console.log('Hey there!');
+  console.log(this); //returns the constructor function
 };
  */
 
@@ -121,10 +123,12 @@ console.log(elias.hasOwnProperty('species')); //false
 console.log(elias.__proto__.__proto__); // object.prototype
 console.log(elias.__proto__.__proto__.__proto__); //null
 
-console.dir(Person.prototype.constructor);
+console.dir(Person.prototype.constructor); //returns the function if '.log' is used
 
 const arr = [3, 6, 4, 5, 6, 9, 3];
 console.log(arr.__proto__); //each array inherits methods from the array prototype
+
+// new Array === []
 
 console.log(arr.__proto__ === Array.prototype); //true
 console.log(arr.__proto__.__proto__); // object prototype
@@ -134,10 +138,14 @@ Array.prototype.unique = function () {
   return [...new Set(this)];
 };
 
-console.log(arr.unique());
+console.log(arr.unique()); 
+
+//extending the prototype of a built-in object is not a good idea because (1) JavaScript may update and use your 'unique' method (2) you are working with other developers
 
 const h1 = document.querySelector('h1');
-console.dir(x => x + 1); */
+console.dir(x => x + 1); // functions are objects and objects have prototype
+
+*/
 
 /************************************************/
 /* CODING CHALLENGE #1
@@ -172,6 +180,8 @@ mercedes.brake(); */
 /* ES6 CLASSES
 /************************************************/
 
+// just syntatic sugar - classes are still functions so it has expression and declaration
+
 //class expression
 // const PersonCl = class {
 
@@ -184,7 +194,7 @@ class PersonCl {
     this.birthYear = birthYear;
   }
 
-  //methods will be added to the prototype - still prototype inheritance
+  //methods will be added to the prototype - still prototype inheritance // instance methods
   calcAge() {
     console.log(2021 - this.birthYear);
   }
@@ -197,7 +207,8 @@ class PersonCl {
     return 2037 - this.birthYear;
   }
 
-  //setting a property that already exists
+  //setting a property that already exists - use this._propertyName and add a getter
+
   set fullName(name) {
     console.log(name);
     if (name.includes(' ')) this._fullName = name;
@@ -227,18 +238,22 @@ console.log(elias.__proto__ === PersonCl.prototype); */
 
 // elias.greet();
 
-//1. Classes are not hoisted even if they are declarations
+//1. Classes are not hoisted even if they are declarations, they cannot be used before being declared
 //2. Classes are first class - can be passed and returned from functions
 //3. Classes are executed in strict mode
 
 /* const chise = new PersonCl('Chise Hatori', 2005);
-PersonCl.hey();
+
+
+PersonCl.hey(); // this keyword points to the entire class
  */
+
 /************************************************/
 /* SETTERS AND GETTERS
 /************************************************/
 
-// setters and getters are functions/properties that get and set / kind of added as a property
+// setters and getters are functions/properties that get and set a value / kind of added as a property
+
 /* 
 const account = {
   owner: 'Elias',
@@ -248,15 +263,16 @@ const account = {
     return this.movements.slice(-1).pop();
   },
 
+  // any setter needs to have at least one parameter
   set latest(mov) {
     this.movements.push(mov);
   },
 };
 
-//get - has no call
+//get - has no call / simply use it as a property
 console.log(account.latest);
 
-//set
+//set 
 account.latest = 50;
 console.log(account.movements); */
 
@@ -264,7 +280,8 @@ console.log(account.movements); */
 /* STATIC METHODS
 /************************************************/
 
-//Array.from is attached in the array constructor
+//Array.from is attached in the array constructor not on the prototype
+
 //Number.parseFloat is attached to the number constructor
 
 /************************************************/
