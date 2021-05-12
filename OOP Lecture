@@ -305,11 +305,12 @@ kabu.name = 'Kabu';
 kabu.birthYear = '2002';
 kabu.calcAge();
 
-console.log(kabu.__proto__ === PersonProto);
+console.log(kabu.__proto__ === PersonProto); // true
 
 const natsume = Object.create(PersonProto);
 
-natsume.init('Natsume', 1979);
+natsume.init('Natsume', 1979); // not a constructor function but the 'this' keyword points to natsume object
+
 natsume.calcAge(); */
 
 /************************************************/
@@ -367,7 +368,7 @@ const Student = function (firstName, birthYear, course) {
   this.course = course;
 };
 
-// Linking prototypes
+// Linking prototypes - Object.create returns an empty object and should be linked before adding methods
 Student.prototype = Object.create(Person.prototype);
 
 Student.prototype.introduce = function () {
@@ -381,12 +382,15 @@ juuzo.calcAge();
 
 console.log(juuzo.__proto__.__proto__); //person.prototype
 
-console.log(juuzo instanceof Student);
-console.log(juuzo instanceof Person);
-console.log(juuzo instanceof Object);
+console.log(juuzo instanceof Student); //true
+console.log(juuzo instanceof Person); //true
+console.log(juuzo instanceof Object); //true
 
+// set Student to the prototype.constructor
 Student.prototype.constructor = Student;
-console.dir(Student.prototype.constructor); */
+console.dir(Student.prototype.constructor); 
+
+*/
 
 /************************************************/
 /* CODING CHALLENGE #3
@@ -484,6 +488,8 @@ class StudentCl extends PersonCl {
   }
 }
 
+//if you do not need new properties, you can leave out the constructor in the child class 
+
 const lindel = new StudentCl('Lindel Lindenbaum', 2012, 'Zoology');
 lindel.introduce();
 lindel.calcAge(); */
@@ -560,7 +566,7 @@ class Account {
   }
 
   withdraw(val) {
-    this.deposit(-val);
+    this.deposit(-val); // you can call other methods inside a method
   }
 
   requestLoan(val) {
