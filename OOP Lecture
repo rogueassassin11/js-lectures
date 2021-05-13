@@ -533,21 +533,24 @@ alice.calcAge(); */
    ENCAPSULATION - PRIVATE CLASS FIELDS & METHODS
 /************************************************/
 
-// 1. Public fields, 2. private fields, 3. public fields, 4. private methods, static methods
+//to prevent code aside from the class to mess with the code inside the class
 
+// 1. Public fields - will be on all the instances created by the class
+// 2. private fields, 3. public methods 4. private methods, static methods
+/* 
 class Account {
-  // 1. public fields
-  locale = navigator.language;
+  // 1. public fields (instances)
+  locale = navigator.language; //no need to declare with const or let
 
-  // 2. private fields (instances)
+  // 2. private fields (instances) - cannot be accessed outside
   #movements = [];
-  #pin;
+  #pin; // empty variable - first undefined to be redefined
 
   constructor(owner, currency, pin) {
     this.owner = owner;
     this.currency = currency;
 
-    //protected property convention: '_'
+    //protected property convention: '_' - not to be touched outside the class
     // this._movements = [];
     this.#pin = pin;
     // this.locale = navigator.language;
@@ -563,16 +566,19 @@ class Account {
 
   deposit(val) {
     this.#movements.push(val);
+    return this;
   }
 
   withdraw(val) {
     this.deposit(-val); // you can call other methods inside a method
+    return this;
   }
 
   requestLoan(val) {
-    if (this.#approveLoan(val)) {
+    if (this._approveLoan(val)) {
       this.deposit(val);
       console.log('Loan approved');
+      return this;
     }
   }
 
@@ -594,8 +600,74 @@ acc1.withdraw(140);
 acc1.requestLoan(1000);
 
 console.log(acc1.getMovements());
-// console.log(acc1.#movements);
+//console.log(acc1.#movements); // syntax error - cannot be accessed
 console.log(acc1);
 console.log(acc1.pin);
 
 Account.helper();
+
+//chaining methods - do a 'return this' to make it chainable
+acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+
+console.log(acc1.getMovements());
+ */
+
+/************************************************/
+/* CODING CHALLENGE 4
+/************************************************/
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`${this.make} going at ${this.speed} km/h`);
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(`${this.make} going at ${this.speed} km/h`);
+    return this;
+  }
+
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+
+  set speedUS(speed) {
+    this.speed = speed * 1.6;
+  }
+}
+
+class EVCl extends CarCl {
+  #charge;
+
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+    return this;
+  }
+
+  accelerate() {
+    this.speed += 20;
+    this.#charge -= 1;
+    console.log(
+      `${this.make} going at ${this.speed} km/h, with a charge of ${
+        this.#charge
+      }%`
+    );
+    return this;
+  }
+}
+
+const rivian = new EVCl('Rivian', 100, 24);
+rivian.accelerate();
+
+rivian.chargeBattery(50).accelerate().brake();
