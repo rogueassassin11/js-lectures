@@ -1,0 +1,81 @@
+/***********************************************/
+/* LECTURE NOTES
+
+  SYNCHRONOUS CODE - executed line by line,
+each line of code waiting for the previous line to finish
+
+  ASYNCHRONOUS CODE - executed after a task in the background finishes / non-blocking / doesn't wait / not occuring at the same time
+
+  img.src => setting a source attribute is asynchronous
+
+  listening for 'load' event -> also asynchronous
+
+  AJAX -> Asynchronous JavaScript and XML -> request data from web servers dynamically
+
+  API -> piece of software to be used by another software to allow applications to interact with each other
+
+  ONLINE / WEB API -> application running on the server, receiving requests for data and sends data back as response
+
+  XML -> old data format to transmit messages on the web
+
+  JSON -> new modern data format that is a javascript object
+
+  CORS -> Cross-origin resource sharing
+
+
+  REQUEST-RESPONSE MODEL / CLIENT-SERVER ARCHITECTURE
+  -----------------------------------------   
+  1. DOMAIN NAME SERVER -> converts url to ip-address of web server
+
+  2. TRANSMISSION CONTROL PROTOCOL/IP Socket connection -> sets the rules about how data travels across the web / breaks down requests into packets and reassemble them
+
+  3. HYPERTEXT TRANSFER PROTOCOL -> allows clients and web servers to communicate
+
+  4. HTTP RESPONSE 
+
+  5. Index.html is first loaded, scanned for assets, process is repeated for each file
+
+
+/************************************************/
+
+'use strict';
+
+const btn = document.querySelector('.btn-country');
+const countriesContainer = document.querySelector('.countries');
+
+///////////////////////////////////////
+
+//Using REST Countries API with XML
+
+const getCountryData = function (country) {
+  const request = new XMLHttpRequest();
+  request.open('GET', `https://restcountries.eu/rest/v2/name/${country}`);
+  request.send();
+
+  request.addEventListener('load', function () {
+    //convert JSON
+    const [data] = JSON.parse(this.responseText);
+    console.log(data);
+
+    const html = `
+    <article class="country">
+    <img class="country__img" src="${data.flag}" />
+    <div class="country__data">
+      <h3 class="country__name">${data.name}</h3>
+      <h4 class="country__region">${data.region}</h4>
+      <p class="country__row"><span>👫</span>${(
+        +data.population / 1000000
+      ).toFixed(1)}M people</p>
+      <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
+      <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
+    </div>
+  </article>
+  `;
+
+    countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
+  });
+};
+
+getCountryData('japan');
+getCountryData('australia');
