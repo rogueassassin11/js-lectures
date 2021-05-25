@@ -43,6 +43,31 @@ each line of code waiting for the previous line to finish
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  // countriesContainer.style.opacity = 1;
+};
+
+const renderCountry = function (data, className = '') {
+  const html = `
+  <article class="country ${className}">
+  <img class="country__img" src="${data.flag}" />
+  <div class="country__data">
+    <h3 class="country__name">${data.name}</h3>
+    <h4 class="country__region">${data.region}</h4>
+    <p class="country__row"><span>👫</span>${(
+      +data.population / 1000000
+    ).toFixed(1)}M people</p>
+    <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
+    <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
+  </div>
+</article>
+`;
+
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  // countriesContainer.style.opacity = 1;
+};
+
 /////////////////////////////////////////////
 // Using REST Countries API with XML
 
@@ -83,26 +108,6 @@ getCountryData('australia');
 /////////////////////////////////////////////
 // SEQUENCE OF AJAX CALLBACKS IN CALLBACKS
 // CALLBACK HELL
-
-const renderCountry = function (data, className = '') {
-  const html = `
-  <article class="country ${className}">
-  <img class="country__img" src="${data.flag}" />
-  <div class="country__data">
-    <h3 class="country__name">${data.name}</h3>
-    <h4 class="country__region">${data.region}</h4>
-    <p class="country__row"><span>👫</span>${(
-      +data.population / 1000000
-    ).toFixed(1)}M people</p>
-    <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
-    <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
-  </div>
-</article>
-`;
-
-  countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
-};
 
 /*
 
@@ -179,22 +184,89 @@ getCountryData('portugal'); */
 
   Whatever is returned from a promise is the fulfilled value (success value) of the then method.
 
+  HANDLING REJECTED PROMISES
+
+  -> fetch promise only catches errors from internet disconnection
+
+  THROWING ERRORS MANUALLY
 /***********************************************/
 
-const getCountryData = function (country) {
+/* const getCountryData = function (country) {
   const request = fetch(`https://restcountries.eu/rest/v2/name/${country}`)
-    .then(response => response.json())
+    .then(response => {
+      console.log(response);
+    })
     .then(data => {
       renderCountry(data[0]);
-      const neighbour = data[0].borders[0];
-
+      //const neighbour = data[0].borders[0];
+      const neighbour = 'drardr';
       if (!neighbour) return;
 
       // Country 2
       return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`);
     })
     .then(response => response.json())
-    .then(data => renderCountry(data, 'neighbour'));
+    .then(data => renderCountry(data, 'neighbour'))
+    .catch(err => {
+      console.error(`${err} Sorry!`);
+      renderError(`Something went wrong ${err.message}. Try again!`); // will catch any errors on the chain
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    }); //always needs to happen no matter what the promise
+}; */
+
+//getCountryData('germany');
+/* 
+btn.addEventListener('click', function () {
+  getCountryData('portugal');
+});
+
+getCountryData('rararara'); */
+
+/***********************************************/
+/* CHAINING PROMISES (FLAT CHAIN)
+
+  THROWING ERRORS MANUALLY
+/***********************************************/
+
+const getJSON = function (url, errorMsg = `Something went wrong`) {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} ${response.status}`);
+
+    return response.json();
+  });
 };
 
-getCountryData('germany');
+const getCountryData = function (country) {
+  //country 1
+  getJSON(
+    `https://restcountries.eu/rest/v2/name/${country}`,
+    'Country not found!'
+  )
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders[0];
+      if (!neighbour) throw new Error('No neighbour found');
+
+      // Country 2
+      return getJSON(
+        `https://restcountries.eu/rest/v2/alpha/${neighbour}`,
+        `Country not found!`
+      );
+    })
+    .then(data => renderCountry(data, 'neighbour'))
+    .catch(err => {
+      console.error(`${err} Sorry!`);
+      renderError(`Something went wrong ${err.message}. Try again!`); // will catch any errors on the chain
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    }); //always needs to happen no matter what the promise
+};
+
+btn.addEventListener('click', function () {
+  getCountryData('portugal');
+});
+
+getCountryData('australia');
