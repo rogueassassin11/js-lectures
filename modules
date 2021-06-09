@@ -1,0 +1,19 @@
+/*******************************************/
+/* OVERVIEW OF MODULES
+
+    MODULE -> reusable piece of code that 
+    encapsulates implementation details, can 
+    be a standalone file but not always. 
+    -> allows isolation
+    -> abstracts code (low-level code can
+      just be imported)
+    -> leads to organized codebase
+    -> allows reuse
+
+    NATIVE JS (ES6) MODULES
+    -> modules are stored in files, exactly one module per file
+    -> scoped to module, strict mode, this undefined, can import and export, asynchronous file downloading
+    -> imported synchronously, makes bundling and dead code elimination possible, is a live connection and not a copy
+    
+
+/*******************************************/
