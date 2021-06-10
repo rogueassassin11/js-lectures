@@ -15,5 +15,98 @@
     -> scoped to module, strict mode, this undefined, can import and export, asynchronous file downloading
     -> imported synchronously, makes bundling and dead code elimination possible, is a live connection and not a copy
     
+    -> import statements are hoisted
+    -> modules are strict mode in default
 
 /*******************************************/
+
+//IMPORTING MODULE
+// import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+// addToCart('bread', 5);
+// console.log(price, tq);
+
+//import everything
+// import * as ShoppingCart from './shoppingCart.js';
+
+// console.log('Importing module');
+
+// //console.log(shippingCost); //undefined because private in module only
+// ShoppingCart.addToCart('bread', 5);
+// console.log(ShoppingCart.totalPrice);
+
+//never mix named and default export
+// import add, { addToCart, totalPrice as price, tq }  from './shoppingCart.js';
+
+import add, { cart } from './shoppingCart.js';
+add('pizza', 2);
+add('bread', 5);
+add('apples', 4);
+
+console.log(cart); //imports are a live connection
+
+/***********************************************/
+/* MODULE PATTERN 
+    -> use functions because can make data private and return values
+/***********************************************/
+
+/* const ShoppingCart2 = (function () {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(
+      `${quantity} ${product} added to the cart (shipping cost is ${shippingCost})`
+    );
+  };
+
+  const orderStock = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} ordered from supplier`);
+  };
+
+  return {
+    addToCart,
+    cart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+
+ShoppingCart2.addToCart('apple', 4);
+ShoppingCart2.addToCart('pizza', 4);
+console.log(ShoppingCart2);
+//console.log(ShoppingCart2.shippingCost) //undefined
+ */
+
+/***********************************************/
+/* COMMONJS MODULES
+    -> one file is one module - commonly used in NodeJS
+/***********************************************/
+
+/* //export
+export.addTocart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(
+    `${quantity} ${product} added to the cart (shipping cost is ${shippingCost})`
+  );
+};
+
+//import
+const { addTocart} = require('./shoppingCart.js'); */
+
+/***********************************************/
+/* COMMAND LINE
+  -> dir - show contents of the current folder
+  -> cd - change directory
+  -> .. - go up the file tree
+  -> cd ../.. - move up two levels
+  -> clear - to clear
+  -> mkdir - create new folder
+  -> edit - to create new file
+  -> del - to delete a file
+  -> mv {file} {location} - to move a file
+  -> rmdir - remove directory
+/***********************************************/
