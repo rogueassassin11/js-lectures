@@ -1,0 +1,25 @@
+// kind of like a public api
+
+// Exporting module
+console.log('Exporting module');
+
+// all these variables are private in the module
+const shippingCost = 0;
+export const cart = [];
+
+//named exports are top-level defined
+export const addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to the cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+
+//default export - export one thing from the module, without name
+export default function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to the cart`);
+}
