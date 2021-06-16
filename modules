@@ -187,3 +187,24 @@ import 'regenerator-runtime/runtime';
     -> Nested code: use early return, use ternary, avoid for loops and use array methods, avoid callback-based async APIs
     -> Async code: use async/await, run promises in parallel (promise.all), handle errors and promise rejections
 /***********************************************/
+
+/***********************************************/
+/* DECLARATIVE AND FUNCTIONAL JS PRINCIPLES
+   -> Imperative code: explains how to do things,
+      step by step recipe of a cake. (using a for loop on an array)
+   -> Declarative code: what to do, step by step gets abstracted away, description of a cake (using a map on an array)
+   
+   -> Functional programming: declarative programming paradigm, combining pure functions and avoiding side effect and mutation of data
+
+   SIDE EFFECT -> mutation of data outside the scope of the function
+   PURE FUNCTION -> a function without side effects and does not depend on external variables
+   IMMUTABILITY -> state data is never modified, state is copied and mutated and returned
+
+
+/***********************************************/
+
+// to make object immutable (can no longer put any properties) - Object.freeze is not deep freeze - cannot add a new element but can change the existing
+const spendingLimits = Object.freeze({
+  juuzo: 1500,
+  tetsuro: 100,
+});
